@@ -3,6 +3,9 @@ build
 .idea
 .ccls-cache
 
+# Libs
+libs/steam
+
 # CMake with Visual Studio
 .vs/
 CMakeFiles/

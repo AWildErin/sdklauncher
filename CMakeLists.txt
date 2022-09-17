@@ -43,7 +43,7 @@ list(APPEND LINK_DIRS "${STEAM_DIR}/redistributable_bin")
 if (WIN32)
 	list(APPEND LINK_LIBS win64/steam_api64)
 else()
-	list(APPEND LINK_LIBS "linux64/steam_api")
+	list(APPEND LINK_LIBS ${CMAKE_BINARY_DIR}/libsteam_api.so)
 endif()
 
 # Main Application
@@ -65,4 +65,8 @@ if(WIN32)
 
 	# Copy the steam windows binary
 	configure_file("${STEAM_DIR}/redistributable_bin/win64/steam_api64.dll" "${CMAKE_BINARY_DIR}/steam_api64.dll" COPYONLY)
+endif()
+
+if(UNIX)
+	configure_file("${STEAM_DIR}/redistributable_bin/linux64/libsteam_api.so" "${CMAKE_BINARY_DIR}/libsteam_api.so" COPYONLY)
 endif()

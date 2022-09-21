@@ -1,11 +1,11 @@
 #include "mainview.h"
 
-#include <steam_api.h>
-#include <stdlib.h> 
-
 #include <QApplication>
 #include <QFile>
 #include <QIcon>
+#include <QMessageBox>
+#include <stdlib.h>
+#include <steam_api.h>
 
 // AppID which we will use for steam.
 // 440000 - P2CE
@@ -25,14 +25,14 @@ int main( int argc, char **argv )
 	qputenv( "SteamAppId", QString::number( APP_ID ).toLocal8Bit() );
 	qputenv( "SteamGameId", QString::number( APP_ID ).toLocal8Bit() );
 
+	QApplication app( argc, argv );
+
 	// Call Steam
 	if ( !SteamAPI_Init() )
 	{
-		printf( "Fatal Error - Steam must be running to use this tool (SteamAPI_Init() failed).\n" );
+		QMessageBox::critical( nullptr, "Fatal Error", "Steam must be running to use this tool (SteamAPI_Init() failed)." );
 		return 1;
 	}
-
-	QApplication app( argc, argv );
 
 	QApplication::setAttribute( Qt::AA_DisableWindowContextHelpButton );
 	QApplication::setWindowIcon( QIcon( ":/resource/logo.png" ) );

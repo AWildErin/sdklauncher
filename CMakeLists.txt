@@ -35,15 +35,21 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+option(USE_STEAM "Uses steam" OFF)
+
 # Steam
-set(STEAM_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/steam)
-add_library(steam_api64 SHARED IMPORTED)
-include_directories("${STEAM_DIR}/public/steam")
-list(APPEND LINK_DIRS "${STEAM_DIR}/redistributable_bin")
-if (WIN32)
-	list(APPEND LINK_LIBS win64/steam_api64)
-else()
-	list(APPEND LINK_LIBS ${CMAKE_BINARY_DIR}/libsteam_api.so)
+if(USE_STEAM)
+	set(STEAM_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/steam)
+	add_library(steam_api64 SHARED IMPORTED)
+	include_directories("${STEAM_DIR}/public/steam")
+	list(APPEND LINK_DIRS "${STEAM_DIR}/redistributable_bin")
+	if (WIN32)
+		list(APPEND LINK_LIBS win64/steam_api64)
+	else()
+		list(APPEND LINK_LIBS ${CMAKE_BINARY_DIR}/libsteam_api.so)
+	endif()
+
+	add_compile_definitions(USE_STEAM)
 endif()
 
 # Main Application
@@ -64,9 +70,11 @@ if(WIN32)
 	set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${QT_BASEDIR}/bin;")
 
 	# Copy the steam windows binary
-	configure_file("${STEAM_DIR}/redistributable_bin/win64/steam_api64.dll" "${CMAKE_BINARY_DIR}/steam_api64.dll" COPYONLY)
+	if(USE_STEAM)
+		configure_file("${STEAM_DIR}/redistributable_bin/win64/steam_api64.dll" "${CMAKE_BINARY_DIR}/steam_api64.dll" COPYONLY)
+	endif()
 endif()
 
-if(UNIX)
+if(UNIX AND USE_STEAM)
 	configure_file("${STEAM_DIR}/redistributable_bin/linux64/libsteam_api.so" "${CMAKE_BINARY_DIR}/libsteam_api.so" COPYONLY)
 endif()

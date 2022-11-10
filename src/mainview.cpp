@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
 
 using namespace ui;
 
@@ -17,18 +18,22 @@ CMainView::CMainView( QWidget *pParent ) :
 
 	QFile configFile( "./config.json" );
 	QJsonDocument JSONConfigDocument;
-	if ( !configFile.exists() )
+	if ( !configFile.exists() && configFile.open( QFile::WriteOnly ) )
 	{
-		configFile.open( QFile::WriteOnly );
 		JSONConfigDocument = defaultConfig();
 		configFile.write( JSONConfigDocument.toJson() );
 		configFile.close();
 	}
-	else
+	else if ( configFile.open (QFile::ReadOnly ) )
 	{
 		configFile.open( QFile::ReadOnly );
 		JSONConfigDocument = QJsonDocument::fromJson( configFile.readAll() );
 		configFile.close();
+	}
+	else
+	{
+		QMessageBox::critical( this, "Config Error", "Couldn't load config file" );
+		return;
 	}
 
 	QJsonObject JSONConfig = JSONConfigDocument.object();
@@ -49,24 +54,26 @@ CMainView::CMainView( QWidget *pParent ) :
 			pButton->setObjectName( "MediaItem" );
 
 			pLayout->addWidget( pButton );
-			connect( pButton, &QPushButton::pressed, this,
-					 [=]()
-					 {
-						 auto arr = item["args"].toArray().toVariantList();
-						 QStringList args;
 
-						 foreach( QVariant vItem, arr )
-						 {
-							 args << vItem.toString();
-						 }
+			auto pushButton = [=]()
+			{
+				auto arr = item["args"].toArray().toVariantList();
+				QStringList args;
 
-						 if ( item["urlType"].toString() == "url" )
-							 OpenUrl( item["url"].toString() );
-						 else if ( item["urlType"].toString() == "process" )
-							 OpenProcess( item["url"].toString(), args );
-						 else
-							 qDebug() << "Unknown URL Type: " << item["urlType"].toString();
-					 } );
+				foreach( QVariant vItem, arr )
+				{
+					args << vItem.toString();
+				}
+
+				if ( item["urlType"].toString() == "url" )
+					OpenUrl( item["url"].toString() );
+				else if ( item["urlType"].toString() == "process" )
+					OpenProcess( item["url"].toString(), args );
+				else
+					qDebug() << "Unknown URL Type: " << item["urlType"].toString();
+			};
+
+			connect( pButton, &QPushButton::pressed, this, pushButton);
 		}
 	}
 

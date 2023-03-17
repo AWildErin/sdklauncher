@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -15,8 +17,6 @@
 #define OS_BIN_SUFFIX ".sh"
 #endif
 
-// We define a struct with the required
-// variables, which we later use in MediaSection_t.
 struct MediaItem_t
 {
 	QString name;
@@ -26,17 +26,12 @@ struct MediaItem_t
 	QStringList args;
 };
 
-// This struct is used to house MediaItem_t and
-// a header name. it's used by Sections to hold
-// the default configuration if the file were to
-// be missing or deleted by the user.
 struct MediaSection_t
 {
 	QString header;
 	QVector<MediaItem_t> items;
 };
 
-// the default configuration
 static QVector<MediaSection_t> Sections(
 	{ {
 		  "Applications",
@@ -53,8 +48,6 @@ static QVector<MediaSection_t> Sections(
 		  { "Chaos Wiki", ":/resource/chaos.png", "url", "https://chaosinitiative.github.io/Wiki/", { "" } },
 		  { "Momentum Wiki", ":/resource/momentum.png", "url", "https://docs.momentum-mod.org/", { "" } } } } } );
 
-// This function is used to get the default configuration
-// It's used in the original construction of the config file.
 QJsonDocument defaultConfig()
 {
 	QJsonDocument doc;
@@ -74,8 +67,6 @@ QJsonDocument defaultConfig()
 			appItems1["icon"] = item.icon;
 			appItems1["urlType"] = item.urlType;
 			appItems1["url"] = item.url;
-			QJsonArray arguments1;
-
 			appItems1["args"] = QJsonArray::fromStringList( item.args );
 			applications.append( appItems1 );
 		}

@@ -5,3 +5,9 @@
 [submodule "libs/SAPP"]
 	path = libs/SAPP
 	url = https://github.com/Trico-Everfire/SteamAppPathProvider.git
+[submodule "libs/libz-ng"]
+	path = libs/libz-ng
+	url = https://github.com/zlib-ng/zlib-ng.git
+[submodule "libs/libz-ng-minizip-ng"]
+	path = libs/libz-ng-minizip-ng
+	url = https://github.com/zlib-ng/minizip-ng.git

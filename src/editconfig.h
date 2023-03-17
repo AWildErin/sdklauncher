@@ -10,19 +10,27 @@
 #include <QTextEdit>
 namespace ui
 {
-	// The main edit config dialog class
+
 	class CEditConfig : public QDialog
 	{
+		static QJsonArray commandLineParser( const QString &argList );
 	public:
 		CEditConfig( CMainView *parent );
 		QListWidget *m_pEditList;
 		QPushButton *m_pApplyButton;
+		QPushButton *m_pAddCurrentButton;
+	private:
+		enum Quotations
+		{
+			isNone = 0,
+			isSingleQuote,
+			isDoubleQuote
+		};
 	};
 
-	// The popup for config items we want to edit.
 	class CEditConfigPopup : public QDialog
 	{
-		bool applyChanges = false;
+		bool m_ApplyChanges = false;
 
 	public:
 		CEditConfigPopup( CEditConfig *parent );
@@ -35,13 +43,3 @@ namespace ui
 		QPushButton *m_pApplyButton;
 	};
 } // namespace ui
-
-//{
-//	"args": [
-//		"-tools"
-//],
-//	"icon": ":/resource/logo_tools.png",
-//	"name": "P2:CE (Panorama) (Tools Mode)",
-//	"url": "${INSTALLDIR}p2ce.sh",
-//	"urlType": "process"
-//},

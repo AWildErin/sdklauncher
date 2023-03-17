@@ -8,22 +8,17 @@
 #include <stdlib.h>
 #endif
 
-// The Steam API is used by other applications.
-// There is the choice to have the application
-// run in "online" and "offline" mode.
-// The Steam API REQUIRES you to have
-// both internet access AND steam running.
-// So we are locking anything that's steam related.
-// behind a steam related if def.
 #ifdef USE_STEAM
 #include <steam_api.h>
 #endif
 
 // AppID which we will use for steam.
 // 440000 - P2CE
+// 620 - Portal 2
+// 629 - Portal 2 Authoring Tools
 // 1400890 - P2CE SDK
 // 1802710 - Momentum Mod
-constexpr int APP_ID = 440000;
+constexpr const inline int APP_ID = 440000;
 
 #ifdef USE_STEAM
 // This function is called when steam shuts down.
@@ -51,14 +46,33 @@ int main( int argc, char **argv )
 	}
 #endif
 
-	QApplication::setAttribute( Qt::AA_DisableWindowContextHelpButton );
 	QApplication::setWindowIcon( QIcon( ":/resource/logo.png" ) );
 
-	// We set the style from the resources.
 	QFile file( ":/resource/style.qss" );
 	file.open( QFile::ReadOnly );
 	QString styleSheet = QLatin1String( file.readAll() );
 	qApp->setStyleSheet( styleSheet );
+
+	QPalette palette {};
+	palette.setColor( QPalette::Window, QColor( 49, 54, 59 ) );
+	palette.setColor( QPalette::WindowText, Qt::white );
+	palette.setColor( QPalette::Base, QColor( 27, 30, 32 ) );
+	palette.setColor( QPalette::AlternateBase, QColor( 49, 54, 59 ) );
+	palette.setColor( QPalette::ToolTipBase, Qt::black );
+	palette.setColor( QPalette::ToolTipText, Qt::white );
+	palette.setColor( QPalette::Text, Qt::white );
+	palette.setColor( QPalette::Button, QColor( 49, 54, 59 ) );
+	palette.setColor( QPalette::ButtonText, Qt::white );
+	palette.setColor( QPalette::BrightText, Qt::red );
+	palette.setColor( QPalette::Link, QColor( 42, 130, 218 ) );
+	palette.setColor( QPalette::Highlight, QColor( 42, 130, 218 ) );
+	palette.setColor( QPalette::HighlightedText, Qt::black );
+	palette.setColor( QPalette::Active, QPalette::Button, QColor( 49, 54, 59 ) );
+	palette.setColor( QPalette::Disabled, QPalette::ButtonText, Qt::darkGray );
+	palette.setColor( QPalette::Disabled, QPalette::WindowText, Qt::darkGray );
+	palette.setColor( QPalette::Disabled, QPalette::Text, Qt::darkGray );
+	palette.setColor( QPalette::Disabled, QPalette::Light, QColor( 49, 54, 59 ) );
+	qApp->setPalette( palette );
 
 	auto pDialog = new ui::CMainView( nullptr );
 	pDialog->setWindowTitle( "P2:CE SDK Launcher" );
